@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
-app.post("/anthropic/v1/messages", async (req, res) => {
+app.post("/api/messages", async (req, res) => {
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -24,4 +24,3 @@ app.post("/anthropic/v1/messages", async (req, res) => {
 });
 app.get("/health", (req, res) => res.status(200).send("ok"));
 app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
-
