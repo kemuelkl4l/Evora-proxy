@@ -22,5 +22,6 @@ app.post("/anthropic/v1/messages", async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+app.get("/health", (req, res) => res.status(200).send("ok"));
 app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
 
