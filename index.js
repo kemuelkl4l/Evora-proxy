@@ -48,6 +48,13 @@ app.post("/api/messages", async (req, res) => {
       );
     } else {
       const data = await response.json();
+      console.log("proxy response", {
+        status: response.status,
+        type: data.type,
+        error: data.error,
+        stop_reason: data.stop_reason,
+        content_types: Array.isArray(data.content) ? data.content.map((b) => b.type) : undefined,
+      });
       res.json(data);
     }
   } catch (e) {
