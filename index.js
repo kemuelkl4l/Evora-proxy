@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
 const RETIRED_PREFIX = "claude-sonnet-4-5";
-const REPLACEMENT_MODEL = process.env.MODEL_OVERRIDE || "claude-sonnet-5-5";
+const REPLACEMENT_MODEL = process.env.MODEL_OVERRIDE || "claude-sonnet-4-5-20250929";
 function resolveModel(model) {
   if (typeof model === "string" && model.startsWith(RETIRED_PREFIX)) {
     return REPLACEMENT_MODEL;
