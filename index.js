@@ -20,7 +20,16 @@ app.post("/api/messages", async (req, res) => {
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     const isStreaming = req.body.stream === true;
-    req.body.model = resolveModel(req.body.model);
+    const originalModel = req.body.model;
+    req.body.model = resolveModel(originalModel);
+    if (req.body.model !== originalModel) {
+      if (!req.body.thinking) {
+        req.body.thinking = { type: "disabled" };
+      }
+      if (!isStreaming) {
+        req.body.max_tokens = Math.min(Math.round((req.body.max_tokens || 4096) * 1.5), 16000);
+      }
+    }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -55,6 +64,9 @@ app.post("/api/messages", async (req, res) => {
         stop_reason: data.stop_reason,
         content_types: Array.isArray(data.content) ? data.content.map((b) => b.type) : undefined,
       });
+      if (Array.isArray(data.content)) {
+        data.content = data.content.filter((b) => b.type !== "thinking" && b.type !== "redacted_thinking");
+      }
       res.json(data);
     }
   } catch (e) {
