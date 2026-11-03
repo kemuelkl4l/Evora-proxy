@@ -23,8 +23,8 @@ app.post("/api/messages", async (req, res) => {
     const originalModel = req.body.model;
     req.body.model = resolveModel(originalModel);
     if (req.body.model !== originalModel) {
-      if (!req.body.thinking) {
-        req.body.thinking = { type: "disabled" };
+      if (!req.body.thinking && req.body.model.startsWith("claude-sonnet-5")) {
+        req.body.thinking = { type: "between_tools" };
       }
       if (!isStreaming) {
         req.body.max_tokens = Math.min(Math.round((req.body.max_tokens || 4096) * 1.5), 16000);
