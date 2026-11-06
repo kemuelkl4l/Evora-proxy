@@ -20,10 +20,9 @@ app.post("/api/messages", async (req, res) => {
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
     const isStreaming = req.body.stream === true;
-    const originalModel = req.body.model;
-    req.body.model = resolveModel(originalModel);
-    if (req.body.model !== originalModel) {
-      if (!req.body.thinking && req.body.model.startsWith("claude-sonnet-5")) {
+    req.body.model = resolveModel(req.body.model);
+    if (typeof req.body.model === "string" && req.body.model.startsWith("claude-sonnet-5")) {
+      if (!req.body.thinking) {
         req.body.thinking = { type: "between_tools" };
       }
       if (!isStreaming) {
